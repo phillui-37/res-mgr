@@ -12,10 +12,11 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.52.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/ws": "^8.18.0",
     "dotenv": "^16.4.7",
     "jsonwebtoken": "^9.0.2",
-    "ws": "^8.18.0",
-    "@types/jsonwebtoken": "^9.0.9",
-    "@types/ws": "^8.18.0"
+    "typescript": "^6.0.2",
+    "ws": "^8.18.0"
   }
 }

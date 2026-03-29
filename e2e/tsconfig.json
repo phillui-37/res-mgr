@@ -7,13 +7,9 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "outDir": "dist",
-    "rootDir": ".",
-    "baseUrl": ".",
-    "paths": {
-      "@fixtures/*": ["./fixtures/*"],
-      "@seed/*": ["./seed/*"]
-    }
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "rootDir": "."
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist", "test-results", "playwright-report"]
