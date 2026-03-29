@@ -1,0 +1,22 @@
+{
+  "name": "@res-mgr/e2e",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:ui": "playwright test --ui",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.52.0",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/ws": "^8.18.0",
+    "dotenv": "^16.4.7",
+    "jsonwebtoken": "^9.0.2",
+    "typescript": "^6.0.2",
+    "ws": "^8.18.0"
+  }
+}

@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+E2E_DIR="$PROJECT_ROOT/e2e"
+
+usage() {
+  cat <<EOF
+Usage: bin/e2e [OPTIONS] [PLAYWRIGHT_ARGS...]
+
+Run E2E tests with Playwright.
+
+Options:
+  --install     Install dependencies + Chromium before running
+  --ui          Open Playwright UI mode
+  --headed      Run in headed (visible browser) mode
+  --debug       Run with Playwright Inspector
+  -h, --help    Show this help
+
+Examples:
+  bin/e2e                           # Run all tests
+  bin/e2e --ui                      # Interactive UI mode
+  bin/e2e --headed                  # See the browser
+  bin/e2e tests/auth/               # Run only auth tests
+  bin/e2e --install                 # Install deps then run
+EOF
+  exit 0
+}
+
+INSTALL=false
+EXTRA_ARGS=()
+
+for arg in "$@"; do
+  case "$arg" in
+    -h|--help) usage ;;
+    --install) INSTALL=true ;;
+    --ui) EXTRA_ARGS+=("--ui") ;;
+    --headed) EXTRA_ARGS+=("--headed") ;;
+    --debug) EXTRA_ARGS+=("--debug") ;;
+    *) EXTRA_ARGS+=("$arg") ;;
+  esac
+done
+
+cd "$E2E_DIR"
+
+if [ "$INSTALL" = true ]; then
+  echo "📦 Installing dependencies..."
+  npm install
+  npx playwright install chromium
+fi
+
+echo "🧪 Running E2E tests..."
+npx playwright test "${EXTRA_ARGS[@]}"

@@ -1,0 +1,8 @@
+# E2E test plugin — deployed dynamically during plugin lifecycle tests.
+# Matches PluginLoader::Config url_resource type.
+name: e2e_test_plugin
+version: "1.0.0"
+type: url_resource
+capabilities:
+  - inventory
+  - viewer
