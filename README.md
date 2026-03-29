@@ -7,27 +7,27 @@ A modular resource management server for organizing, tracking, and sharing media
 ```
 ┌─────────────────────────────────────────────────┐
 │  Frontend (React 19 / Vite 8 / Electron)        │
-│  ┌──────────┐ ┌──────────┐ ┌────────────────┐   │
-│  │ Dashboard │ │ Resource │ │ P2P Sharing    │   │
-│  │          │ │ Browser  │ │ (WebRTC)       │   │
-│  └──────────┘ └──────────┘ └────────────────┘   │
+│  ┌───────────┐ ┌──────────┐ ┌────────────────┐  │
+│  │ Dashboard │ │ Resource │ │ P2P Sharing    │  │
+│  │           │ │ Browser  │ │ (WebRTC)       │  │
+│  └───────────┘ └──────────┘ └────────────────┘  │
 └──────────────────┬──────────────────────────────┘
                    │ REST + WebSocket
 ┌──────────────────┴──────────────────────────────┐
-│  Backend (Ruby / Roda / Sequel)                  │
+│  Backend (Ruby / Roda / Sequel)                 │
 │  ┌─────────┐ ┌──────────┐ ┌────────────────┐    │
 │  │ Auth    │ │ Inventory│ │ WebSocket Hub  │    │
 │  │ (JWT)   │ │ (CRUD)   │ │ (Pub/Sub+P2P)  │    │
 │  └─────────┘ └──────────┘ └────────────────┘    │
-│  ┌──────────────────────────────────────────┐    │
-│  │  Plugin System (6 built-in + extensible)  │    │
-│  │  ebook │ music │ video │ game │ pic │ web │    │
-│  └──────────────────────────────────────────┘    │
+│  ┌───────────────────────────────────────────┐  │
+│  │  Plugin System (6 built-in + extensible)  │  │
+│  │  ebook │ music │ video │ game │ pic │ web │  │
+│  └───────────────────────────────────────────┘  │
 └──────────────────┬──────────────────────────────┘
                    │
-         ┌─────────┴─────────┐
+         ┌─────────┴───────────┐
          │ SQLite / PostgreSQL │
-         └───────────────────┘
+         └─────────────────────┘
 ```
 
 ## Tech Stack
