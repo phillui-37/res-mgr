@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# bin/setup — bootstrap the containerised development environment
+# Requires: podman (https://podman.io)
+set -euo pipefail
+
+command -v podman &>/dev/null || { echo "ERROR: podman not found." >&2; exit 1; }
+
+echo "==> Building dev container image (installs Ruby + gems inside the container)..."
+podman compose build dev
+
+echo ""
+echo "Setup complete. Common commands:"
+echo "  bin/dev                          # start dev server (SQLite)"
+echo "  bin/dev --profile pg             # start dev server + PostgreSQL"
+echo "  bin/console                      # open a Ruby console in the container"
+echo "  podman compose run --rm dev gel install  # re-install gems after Gemfile changes"

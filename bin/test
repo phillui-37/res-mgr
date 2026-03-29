@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# bin/test — run the test suite inside the dev container
+set -euo pipefail
+
+command -v podman &>/dev/null || { echo "ERROR: podman not found." >&2; exit 1; }
+
+exec podman compose run --rm dev gel exec rspec "$@"

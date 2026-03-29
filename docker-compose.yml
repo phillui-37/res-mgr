@@ -1,0 +1,69 @@
+services:
+  # ── Dev (default): SQLite + source volume mount + hot-reload ───────────────
+  dev:
+    build:
+      context: .
+      target: deps           # stop at the gem-install stage; code is mounted
+    command: gel exec puma -C config/puma.rb
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app               # mount entire source for live editing
+      - gems:/usr/local/rbenv/versions  # preserve compiled gems across rebuilds
+    environment:
+      DATABASE_URL: sqlite://db/res_mgr.sqlite3
+      LOG_LEVEL: debug
+    profiles: ["dev", "default"]
+
+  # ── Production-like: SQLite, baked image ───────────────────────────────────
+  app:
+    build:
+      context: .
+      target: app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./db:/app/db
+      - ./plugins:/app/plugins
+      - ./config/plugins:/app/config/plugins
+    environment:
+      DATABASE_URL: sqlite://db/res_mgr.sqlite3
+      LOG_LEVEL: info
+    profiles: ["sqlite"]
+
+  # ── PostgreSQL profile: podman compose --profile pg up ─────────────────────
+  app-pg:
+    build:
+      context: .
+      target: app
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./plugins:/app/plugins
+      - ./config/plugins:/app/config/plugins
+    environment:
+      DATABASE_URL: postgres://res_mgr:${POSTGRES_PASSWORD:-secret}@postgres:5432/res_mgr
+      LOG_LEVEL: info
+    depends_on:
+      postgres:
+        condition: service_healthy
+    profiles: ["pg"]
+
+  postgres:
+    image: docker.io/postgres:16-alpine
+    environment:
+      POSTGRES_USER: res_mgr
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
+      POSTGRES_DB: res_mgr
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U res_mgr"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    profiles: ["pg"]
+
+volumes:
+  postgres_data:
+  gems:

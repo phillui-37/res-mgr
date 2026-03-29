@@ -1,0 +1,26 @@
+server:
+  host: "0.0.0.0"
+  port: 3000
+
+database:
+  # Overridden by DATABASE_URL env var at runtime.
+  # Adapter is determined from the URL scheme: sqlite:// or postgres://
+  url: "sqlite://db/res_mgr.sqlite3"
+
+plugins:
+  dir: "plugins"
+  config_dir: "config/plugins"
+
+auth:
+  # Overridden by JWT_SECRET env var. Must be set in production.
+  jwt_secret: "changeme"
+  token_expiry_seconds: 86400
+  # Optional list of static API keys accepted via the X-API-Key header.
+  # Example:
+  #   api_keys:
+  #     - "my-long-random-key-1"
+  #     - "my-long-random-key-2"
+  api_keys: []
+
+log:
+  level: "info"

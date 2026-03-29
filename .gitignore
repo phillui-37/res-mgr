@@ -1,0 +1,26 @@
+# Environment secrets — never commit
+.env
+
+# SQLite database files
+db/*.sqlite3
+db/*.sqlite3-shm
+db/*.sqlite3-wal
+
+# Bundler / Gel
+.bundle/
+vendor/bundle/
+
+# Logs
+log/
+*.log
+
+# Temp files
+tmp/
+
+# macOS
+.DS_Store
+
+# Editor
+.idea/
+.vscode/
+*.swp

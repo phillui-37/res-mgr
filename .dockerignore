@@ -1,0 +1,3 @@
+# This file lists podman/docker generated files that should not be committed.
+.env
+db/*.sqlite3
