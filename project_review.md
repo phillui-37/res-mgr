@@ -417,30 +417,30 @@ insufficient.
 
 ## Summary Table
 
-| #   | Issue                                  | Severity | Section |
-|-----|----------------------------------------|----------|---------|
-| 1   | Resource type shape mismatch           | P0       | §1.1    |
-| 2   | Progress field names (ms vs seconds)   | P0       | §1.2    |
-| 3   | P2P rooms list missing shared_resources| P0       | §1.3    |
-| 4   | Auth store disconnected from client    | P0       | §2.1    |
-| 5   | Dual JWT localStorage keys             | P0       | §2.2    |
-| 6   | Plugin global singleton coupling       | P1       | §3.1    |
-| 7   | Game plugin extends core module        | P1       | §3.2    |
-| 8   | LIKE wildcard injection                | P1       | §4.3    |
-| 9   | No CORS middleware                     | P1       | §8.2    |
-| 10  | Electron IPC handlers missing          | P1       | §6.2    |
-| 11  | Frontend has 0 tests                   | P1       | §7.2    |
-| 12  | Error handling inconsistency           | P2       | §4.4    |
-| 13  | No error boundaries in React           | P2       | §5.4    |
-| 14  | Missing custom hooks                   | P2       | §5.3    |
-| 15  | No shared type contract                | P2       | §8.1    |
-| 16  | WebSocket URL is relative              | P2       | §6.1    |
-| 17  | No loading/error states in some pages  | P2       | §5.5    |
-| 18  | Bundle size / no code splitting        | P3       | §5.6    |
-| 19  | Hot reload mutates $LOADED_FEATURES    | P3       | §4.5    |
-| 20  | No rate limiting                       | P3       | §8.3    |
-| 21  | DB pool size not configured            | P3       | §8.4    |
-| 22  | Capabilities type implicit conversion  | P3       | §1.4    |
+| #   | Issue                                  | Severity | Section | Status      |
+|-----|----------------------------------------|----------|---------|-------------|
+| 1   | Resource type shape mismatch           | P0       | §1.1    | ✅ Fixed    |
+| 2   | Progress field names (ms vs seconds)   | P0       | §1.2    | ✅ Fixed    |
+| 3   | P2P rooms list missing shared_resources| P0       | §1.3    | ✅ Fixed    |
+| 4   | Auth store disconnected from client    | P0       | §2.1    | ✅ Fixed    |
+| 5   | Dual JWT localStorage keys             | P0       | §2.2    | ✅ Fixed    |
+| 6   | Plugin global singleton coupling       | P1       | §3.1    | Open        |
+| 7   | Game plugin extends core module        | P1       | §3.2    | ✅ Fixed    |
+| 8   | LIKE wildcard injection                | P1       | §4.3    | ✅ Fixed    |
+| 9   | No CORS middleware                     | P1       | §8.2    | ✅ Fixed    |
+| 10  | Electron IPC handlers missing          | P1       | §6.2    | ✅ Fixed    |
+| 11  | Frontend has 0 tests                   | P1       | §7.2    | ✅ Fixed    |
+| 12  | Error handling inconsistency           | P2       | §4.4    | Open        |
+| 13  | No error boundaries in React           | P2       | §5.4    | Open        |
+| 14  | Missing custom hooks                   | P2       | §5.3    | Open        |
+| 15  | No shared type contract                | P2       | §8.1    | Open        |
+| 16  | WebSocket URL is relative              | P2       | §6.1    | Open        |
+| 17  | No loading/error states in some pages  | P2       | §5.5    | Open        |
+| 18  | Bundle size / no code splitting        | P3       | §5.6    | Open        |
+| 19  | Hot reload mutates $LOADED_FEATURES    | P3       | §4.5    | Open        |
+| 20  | No rate limiting                       | P3       | §8.3    | Open        |
+| 21  | DB pool size not configured            | P3       | §8.4    | Open        |
+| 22  | Capabilities type implicit conversion  | P3       | §1.4    | ✅ Fixed    |
 
 ---
 
