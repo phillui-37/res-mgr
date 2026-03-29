@@ -11,8 +11,8 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      "/api": { target: "http://localhost:9292", changeOrigin: true, rewrite: (p) => p.replace(/^\/api/, "") },
-      "/ws": { target: "ws://localhost:9292", ws: true },
+      "/api": { target: "http://localhost:3000", changeOrigin: true, rewrite: (p) => p.replace(/^\/api/, "") },
+      "/ws": { target: "ws://localhost:3000", ws: true },
     },
   },
   build: {
