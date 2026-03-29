@@ -54,9 +54,9 @@ export function ProgressPanel({ plugin, resourceId, records }: ProgressPanelProp
               Page {latest.current_page} / {latest.total_pages}
             </div>
           )}
-          {latest.position_seconds && (
+          {latest.position_ms != null && (
             <div className="text-gray-500 text-xs">
-              {Math.floor(latest.position_seconds / 60)}:{String(Math.floor(latest.position_seconds % 60)).padStart(2, "0")} / {Math.floor((latest.duration_seconds ?? 0) / 60)}:{String(Math.floor((latest.duration_seconds ?? 0) % 60)).padStart(2, "0")}
+              {Math.floor(latest.position_ms / 60000)}:{String(Math.floor((latest.position_ms / 1000) % 60)).padStart(2, "0")} / {Math.floor((latest.duration_ms ?? 0) / 60000)}:{String(Math.floor(((latest.duration_ms ?? 0) / 1000) % 60)).padStart(2, "0")}
             </div>
           )}
           <div className="text-gray-600 text-xs mt-1">Device: {latest.device}</div>

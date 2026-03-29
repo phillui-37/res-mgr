@@ -1,8 +1,10 @@
 import axios from "axios";
 
-// Base URL is proxied via Vite dev server (/api → :9292).
-// In production (web), set VITE_API_BASE_URL. In Electron, use full URL.
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "/api";
+// Base URL: prefer persisted apiUrl, then env var, then default proxy path.
+const BASE_URL =
+  localStorage.getItem("apiUrl") ||
+  import.meta.env.VITE_API_BASE_URL ||
+  "/api";
 
 export const http = axios.create({ baseURL: BASE_URL });
 

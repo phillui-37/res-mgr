@@ -4,7 +4,7 @@ require_relative "../../core/base_plugin"
 
 # Game plugin: manages Windows game binaries with metadata (launch path, platform info).
 class GamePlugin < BasePlugin
-  extend ControllerHelpers
+  include ControllerHelpers
   def name        = "game"
   def version     = "1.0.0"
   def capabilities = %i[inventory]

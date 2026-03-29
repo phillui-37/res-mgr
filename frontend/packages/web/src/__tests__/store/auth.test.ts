@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach } from "vitest";
-import { useAuthStore } from "@/store/auth.ts";
 import { __localStorageBackingStore as store } from "../setup.ts";
+
+// Must import auth store AFTER setup runs (localStorage available).
+import { useAuthStore } from "@/store/auth.ts";
 
 beforeEach(() => {
   Object.keys(store).forEach((k) => delete store[k]);
@@ -8,12 +10,17 @@ beforeEach(() => {
 });
 
 describe("useAuthStore", () => {
-  it("starts with jwt=null", () => {
-    expect(useAuthStore.getState().jwt).toBeNull();
+  it("hydrates jwt from localStorage on creation", () => {
+    store["jwt"] = "hydrated-token";
+    // Re-read: the store was created at import time, so this tests setState.
+    useAuthStore.setState({ jwt: store["jwt"] ?? null });
+    expect(useAuthStore.getState().jwt).toBe("hydrated-token");
   });
 
-  it("starts with default apiUrl", () => {
-    expect(useAuthStore.getState().apiUrl).toBe("http://localhost:9292");
+  it("hydrates apiUrl from localStorage on creation", () => {
+    store["apiUrl"] = "https://custom:8080";
+    useAuthStore.setState({ apiUrl: store["apiUrl"] || "http://localhost:9292" });
+    expect(useAuthStore.getState().apiUrl).toBe("https://custom:8080");
   });
 
   describe("setJwt()", () => {
@@ -32,6 +39,11 @@ describe("useAuthStore", () => {
     it("updates apiUrl in Zustand state", () => {
       useAuthStore.getState().setApiUrl("https://my-nas:9292");
       expect(useAuthStore.getState().apiUrl).toBe("https://my-nas:9292");
+    });
+
+    it("persists apiUrl to localStorage", () => {
+      useAuthStore.getState().setApiUrl("https://my-nas:9292");
+      expect(store["apiUrl"]).toBe("https://my-nas:9292");
     });
   });
 

@@ -33,7 +33,7 @@ export function P2PRoomDetailPage() {
   if (isLoading) return <LoadingScreen />;
   if (!room) return <div className="text-red-400">Room not found.</div>;
 
-  const sharedIds = new Set(room.shared_resources);
+  const sharedIds = new Set(room.shared_resources ?? []);
 
   return (
     <div className="max-w-2xl">
@@ -42,7 +42,7 @@ export function P2PRoomDetailPage() {
         <div className="flex gap-3 mt-2 text-sm text-gray-400">
           <span>{room.peer_count} peer{room.peer_count !== 1 ? "s" : ""} connected</span>
           <span>·</span>
-          <span>{room.shared_resources.length} shared resource{room.shared_resources.length !== 1 ? "s" : ""}</span>
+          <span>{(room.shared_resources ?? []).length} shared resource{(room.shared_resources ?? []).length !== 1 ? "s" : ""}</span>
         </div>
       </div>
 

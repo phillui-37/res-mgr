@@ -63,7 +63,7 @@ export function P2PRoomsPage() {
               <div className="font-mono text-sm text-gray-100">{room.room_id}</div>
               <div className="text-xs text-gray-500 mt-0.5">
                 {room.peer_count} peer{room.peer_count !== 1 ? "s" : ""} ·{" "}
-                {room.shared_resources.length} shared resource{room.shared_resources.length !== 1 ? "s" : ""}
+                {(room.shared_resources ?? []).length} shared resource{(room.shared_resources ?? []).length !== 1 ? "s" : ""}
               </div>
             </div>
             <span className="text-gray-600">→</span>

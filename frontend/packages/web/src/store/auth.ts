@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { http } from "@/api/client.ts";
 
 interface AuthState {
   jwt: string | null;
@@ -9,21 +9,20 @@ interface AuthState {
   logout: () => void;
 }
 
-export const useAuthStore = create<AuthState>()(
-  persist(
-    (set) => ({
-      jwt: null,
-      apiUrl: "http://localhost:9292",
-      setJwt: (jwt) => {
-        localStorage.setItem("jwt", jwt);
-        set({ jwt });
-      },
-      setApiUrl: (apiUrl) => set({ apiUrl }),
-      logout: () => {
-        localStorage.removeItem("jwt");
-        set({ jwt: null });
-      },
-    }),
-    { name: "res-mgr-auth" },
-  ),
-);
+export const useAuthStore = create<AuthState>()((set) => ({
+  jwt: localStorage.getItem("jwt"),
+  apiUrl: localStorage.getItem("apiUrl") || "http://localhost:9292",
+  setJwt: (jwt) => {
+    localStorage.setItem("jwt", jwt);
+    set({ jwt });
+  },
+  setApiUrl: (apiUrl) => {
+    localStorage.setItem("apiUrl", apiUrl);
+    http.defaults.baseURL = apiUrl;
+    set({ apiUrl });
+  },
+  logout: () => {
+    localStorage.removeItem("jwt");
+    set({ jwt: null });
+  },
+}));

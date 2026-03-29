@@ -8,20 +8,31 @@ export interface Resource {
   type: string;
   plugin: PluginName;
   locations: string[];
-  meta: Record<string, unknown>;
+  tags: string[];
+  checksum: string | null;
+  active: boolean;
   created_at: string;
   updated_at: string;
 }
 
+// Progress records differ per plugin; this interface is a superset.
 export interface ProgressRecord {
   id: number;
   resource_id: number;
   device: string;
+  // ebook
   current_page?: number;
   total_pages?: number;
   percentage?: number;
-  position_seconds?: number;
-  duration_seconds?: number;
+  cfi_position?: string;
+  // music / video
+  position_ms?: number;
+  duration_ms?: number;
+  completed?: boolean;
+  // online_viewer
+  progress_pct?: number;
+  last_page?: string;
+  provider?: string;
   updated_at: string;
 }
 
@@ -34,7 +45,7 @@ export interface Plugin {
 export interface P2PRoom {
   room_id: string;
   peer_count: number;
-  shared_resources: number[];
+  shared_resources?: number[];
   ws_url?: string;
 }
 

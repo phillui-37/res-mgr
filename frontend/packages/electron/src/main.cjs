@@ -1,6 +1,6 @@
 // Electron main process (CommonJS — electron does not support ESM main yet).
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { app, BrowserWindow, shell } = require("electron");
+const { app, BrowserWindow, shell, ipcMain } = require("electron");
 const path = require("path");
 
 const IS_DEV = process.env.NODE_ENV !== "production";
@@ -39,6 +39,25 @@ function createWindow() {
 }
 
 app.whenReady().then(() => {
+  // IPC: launch Moonlight for game streaming.
+  ipcMain.handle("launch-moonlight", async (_event, { host, appName }) => {
+    const url = `moonlight://stream/${encodeURIComponent(host)}/${encodeURIComponent(appName)}`;
+    await shell.openExternal(url);
+    return { ok: true };
+  });
+
+  // IPC: open a URL in a new native webview window.
+  ipcMain.handle("open-webview", (_event, { url, title }) => {
+    const child = new BrowserWindow({
+      width: 1024,
+      height: 768,
+      title: title || "Web View",
+      webPreferences: { contextIsolation: true, nodeIntegration: false },
+    });
+    void child.loadURL(url);
+    return { ok: true };
+  });
+
   createWindow();
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();

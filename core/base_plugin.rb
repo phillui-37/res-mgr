@@ -50,6 +50,6 @@ class BasePlugin
   def on_unload; end
 
   def to_h
-    { name: name, version: version, capabilities: capabilities }
+    { name: name, version: version, capabilities: capabilities.map(&:to_s) }
   end
 end

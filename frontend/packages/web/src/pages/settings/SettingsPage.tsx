@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useAuthStore } from "@/store/auth.ts";
-import { http } from "@/api/client.ts";
 import { Button } from "@/components/ui/Button.tsx";
 import { Input } from "@/components/ui/Input.tsx";
 
@@ -13,8 +12,6 @@ export function SettingsPage() {
   function save() {
     setJwt(token);
     setApiUrl(url);
-    // Update axios base URL at runtime
-    http.defaults.baseURL = url;
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
   }

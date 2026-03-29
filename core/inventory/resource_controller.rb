@@ -44,7 +44,7 @@ class ResourceController
       ds = Resource.where(active: true)
       ds = ds.where(plugin: r.params["plugin"]) if r.params["plugin"]
       ds = ds.where(type:   r.params["type"])   if r.params["type"]
-      ds = ds.where(Sequel.like(:name, "%#{r.params['name']}%")) if r.params["name"]
+      ds = ds.where(Sequel.like(:name, "%#{r.params['name'].gsub(/[%_\\]/) { |c| "\\#{c}" }}%")) if r.params["name"]
 
       total  = ds.count
       result = ds.limit(per_page).offset((page - 1) * per_page).map(&:to_api_h)

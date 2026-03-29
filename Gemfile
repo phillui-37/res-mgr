@@ -8,6 +8,7 @@ ruby "3.4.1"
 # HTTP
 gem "roda", "~> 3.85"
 gem "puma", "~> 6.4"
+gem "rack-cors", "~> 2.0"
 
 # DB
 gem "sequel", "~> 5.86"

@@ -53,7 +53,7 @@ RSpec.describe BasePlugin do
       expect(plugin.to_h).to eq(
         name:         "test_plugin",
         version:      "2.0.0",
-        capabilities: %i[inventory viewer]
+        capabilities: %w[inventory viewer]
       )
     end
   end
