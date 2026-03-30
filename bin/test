@@ -1,7 +1,27 @@
 #!/usr/bin/env bash
-# bin/test — run the test suite inside the dev container
+# bin/test — run the test suite
+# Preferred: inside the dev container via podman.
+# Fallback: locally via bundle exec (used on Crostini/LXC where podman
+# networking/cgroup controllers are unavailable).
 set -euo pipefail
 
-command -v podman &>/dev/null || { echo "ERROR: podman not found." >&2; exit 1; }
+_run_local() {
+  echo "==> Running tests locally (bundle exec rspec)..."
+  exec bundle exec rspec "$@"
+}
 
-exec podman compose run --rm dev gel exec rspec "$@"
+if ! command -v podman &>/dev/null; then
+  echo "WARNING: podman not found, falling back to local run." >&2
+  _run_local "$@"
+fi
+
+# Detect Crostini / LXC: cgroupControllers will be empty and nftables missing.
+CGROUP_CONTROLLERS=$(podman info --format '{{.Host.CgroupControllers}}' 2>/dev/null || echo "")
+if [[ "$CGROUP_CONTROLLERS" == "[]" || -z "$CGROUP_CONTROLLERS" ]]; then
+  echo "==> Crostini/LXC detected (no cgroup controllers) — running tests locally." >&2
+  _run_local "$@"
+fi
+
+exec podman compose --profile default run --rm \
+  -e GEL_OFFLINE=1 \
+  dev gel exec rspec "$@"

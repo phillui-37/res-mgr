@@ -3,7 +3,7 @@
 
 source "https://rubygems.org"
 
-ruby "3.4.1"
+ruby "4.0.2"
 
 # HTTP
 gem "roda", "~> 3.85"

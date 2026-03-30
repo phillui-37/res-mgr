@@ -18,14 +18,17 @@ RUN git clone --depth=1 https://github.com/rbenv/rbenv.git $RBENV_ROOT \
  && git clone --depth=1 https://github.com/rbenv/ruby-build.git $RBENV_ROOT/plugins/ruby-build \
  && rbenv init -
 
-COPY .ruby-version /tmp/.ruby-version
-RUN RUBY_VERSION=$(cat /tmp/.ruby-version | tr -d '[:space:]') \
- && rbenv install "$RUBY_VERSION" \
+ARG RUBY_VERSION=4.0.2
+RUN rbenv install "$RUBY_VERSION" \
  && rbenv global "$RUBY_VERSION" \
  && rbenv rehash
 
-# Install gel and apply Ruby 3.4 compatibility patches
-RUN gem install gel --no-document
+# Ruby 4.x removed some former stdlib libs (e.g. pstore, ostruct) that gel
+# requires before RubyGems activation — install them as gems then copy into
+# rubylibdir so they are always requireable without gem activation.
+RUN gem install pstore ostruct logger gel --no-document
+COPY bin/install_stdlib_gems.rb /tmp/install_stdlib_gems.rb
+RUN ruby /tmp/install_stdlib_gems.rb
 COPY bin/patch_gel.rb /tmp/patch_gel.rb
 RUN ruby /tmp/patch_gel.rb && rbenv rehash
 
