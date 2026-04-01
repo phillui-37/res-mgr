@@ -383,31 +383,34 @@ test("my plugin progress flow", async ({ page }) => {
 
 ## Lifecycle
 
-```
-Boot
- │
- ├── PluginLoader::File.load_all!     # Scan plugins/ directory
- │   └── For each plugin.rb:
- │       ├── require file
- │       ├── Instantiate Plugin class
- │       ├── PluginSchema.apply!(plugin)   # Run migrations
- │       ├── PluginRegistry.register(plugin)
- │       └── plugin.on_load
- │
- ├── PluginLoader::Config.load_all!   # Scan config/plugins/ directory
- │   └── For each YAML file:
- │       ├── Parse YAML
- │       ├── Generate Plugin subclass
- │       ├── PluginSchema.apply!(plugin)
- │       └── PluginRegistry.register(plugin)
- │
- └── App routes mounted
-     └── Plugin routes mounted in registration order
+```mermaid
+flowchart TD
+    Boot([Boot])
 
-Shutdown / Unload
- │
- └── plugin.on_unload
-     └── PluginSchema.rollback!(plugin)  # Drop plugin tables
+    Boot --> FileLoader
+    Boot --> ConfigLoader
+
+    subgraph FileLoading["PluginLoader::File.load_all! — Scan plugins/"]
+        FileLoader["For each plugin.rb"] --> Require["require file"]
+        Require --> Instantiate["Instantiate Plugin class"]
+        Instantiate --> ApplySchema1["PluginSchema.apply!(plugin)\n— Run migrations"]
+        ApplySchema1 --> Register1["PluginRegistry.register(plugin)"]
+        Register1 --> OnLoad["plugin.on_load"]
+    end
+
+    subgraph ConfigLoading["PluginLoader::Config.load_all! — Scan config/plugins/"]
+        ConfigLoader["For each YAML file"] --> ParseYAML["Parse YAML"]
+        ParseYAML --> GenerateClass["Generate Plugin subclass"]
+        GenerateClass --> ApplySchema2["PluginSchema.apply!(plugin)"]
+        ApplySchema2 --> Register2["PluginRegistry.register(plugin)"]
+    end
+
+    OnLoad --> AppRoutes["App routes mounted"]
+    Register2 --> AppRoutes
+    AppRoutes --> PluginRoutes["Plugin routes mounted in registration order"]
+
+    Shutdown([Shutdown / Unload]) --> OnUnload["plugin.on_unload"]
+    OnUnload --> Rollback["PluginSchema.rollback!(plugin)\n— Drop plugin tables"]
 ```
 
 ---

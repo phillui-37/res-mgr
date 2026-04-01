@@ -4,30 +4,27 @@ A modular resource management server for organizing, tracking, and sharing media
 
 ## Architecture
 
-```
-┌─────────────────────────────────────────────────┐
-│  Frontend (React 19 / Vite 8 / Electron)        │
-│  ┌───────────┐ ┌──────────┐ ┌────────────────┐  │
-│  │ Dashboard │ │ Resource │ │ P2P Sharing    │  │
-│  │           │ │ Browser  │ │ (WebRTC)       │  │
-│  └───────────┘ └──────────┘ └────────────────┘  │
-└──────────────────┬──────────────────────────────┘
-                   │ REST + WebSocket
-┌──────────────────┴──────────────────────────────┐
-│  Backend (Ruby / Roda / Sequel)                 │
-│  ┌─────────┐ ┌──────────┐ ┌────────────────┐    │
-│  │ Auth    │ │ Inventory│ │ WebSocket Hub  │    │
-│  │ (JWT)   │ │ (CRUD)   │ │ (Pub/Sub+P2P)  │    │
-│  └─────────┘ └──────────┘ └────────────────┘    │
-│  ┌───────────────────────────────────────────┐  │
-│  │  Plugin System (6 built-in + extensible)  │  │
-│  │  ebook │ music │ video │ game │ pic │ web │  │
-│  └───────────────────────────────────────────┘  │
-└──────────────────┬──────────────────────────────┘
-                   │
-         ┌─────────┴───────────┐
-         │ SQLite / PostgreSQL │
-         └─────────────────────┘
+```mermaid
+graph TD
+    subgraph FE["Frontend (React 19 / Vite 8 / Electron)"]
+        Dashboard
+        ResourceBrowser["Resource Browser"]
+        P2P["P2P Sharing (WebRTC)"]
+    end
+
+    subgraph BE["Backend (Ruby / Roda / Sequel)"]
+        Auth["Auth (JWT)"]
+        Inventory["Inventory (CRUD)"]
+        WSHub["WebSocket Hub (Pub/Sub + P2P)"]
+        subgraph Plugins["Plugin System (6 built-in + extensible)"]
+            PluginList["ebook · music · video · game · pic · web"]
+        end
+    end
+
+    DB[("SQLite / PostgreSQL")]
+
+    FE -->|"REST + WebSocket"| BE
+    BE --> DB
 ```
 
 ## Tech Stack
