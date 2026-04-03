@@ -12,6 +12,7 @@ services:
       - gems:/usr/local/rbenv/versions  # preserve compiled gems across rebuilds
     environment:
       DATABASE_URL: sqlite://db/res_mgr.sqlite3
+      JWT_SECRET: ${JWT_SECRET:-}
       LOG_LEVEL: debug
     profiles: ["dev", "default"]
 
@@ -28,6 +29,7 @@ services:
       - ./config/plugins:/app/config/plugins
     environment:
       DATABASE_URL: sqlite://db/res_mgr.sqlite3
+      JWT_SECRET: ${JWT_SECRET:-}
       LOG_LEVEL: info
     profiles: ["sqlite"]
 
@@ -43,6 +45,7 @@ services:
       - ./config/plugins:/app/config/plugins
     environment:
       DATABASE_URL: postgres://res_mgr:${POSTGRES_PASSWORD:-secret}@postgres:5432/res_mgr
+      JWT_SECRET: ${JWT_SECRET:-}
       LOG_LEVEL: info
     depends_on:
       postgres:

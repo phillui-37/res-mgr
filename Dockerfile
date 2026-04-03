@@ -39,6 +39,12 @@ WORKDIR /app
 COPY Gemfile Gemfile.lock ./
 RUN gel install && rbenv rehash
 
+# After gel install, redirect rubylibdir copies of pstore/ostruct/logger to the
+# gel-managed versions so Ruby sees a single path in $LOADED_FEATURES and avoids
+# "already initialized constant" warnings.
+COPY bin/dedup_stdlib_gems.rb /tmp/dedup_stdlib_gems.rb
+RUN ruby /tmp/dedup_stdlib_gems.rb
+
 # ---- final ----
 FROM deps AS app
 

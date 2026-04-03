@@ -1,3 +1,42 @@
-# This file lists podman/docker generated files that should not be committed.
+# Secrets
 .env
+
+# Git
+.git
+.github
+.gitignore
+
+# Database files
 db/*.sqlite3
+db/*.sqlite3-shm
+db/*.sqlite3-wal
+
+# Frontend (has its own build; not needed in the Ruby image)
+frontend/node_modules
+frontend/packages/*/node_modules
+
+# Editor / IDE
+.idea/
+.vscode/
+*.swp
+
+# macOS
+.DS_Store
+
+# Dev / test artefacts
+tmp/
+log/
+*.log
+spec/
+e2e/
+docs/
+draft.md
+README.md
+
+# Bundler / Gel local caches
+.bundle/
+vendor/bundle/
+
+# Ruby version manager files
+.ruby-gemset
+.ruby-lsp
