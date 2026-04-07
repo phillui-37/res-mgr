@@ -1,0 +1,44 @@
+#!/usr/bin/env ruby
+# bin/gen_dev_jwt — generate a long-lived dev JWT and write it to .env
+#
+# Usage:
+#   bin/gen_dev_jwt
+#
+# Reads JWT_SECRET from .env (or environment), writes the generated token
+# back to DEV_JWT= in .env so Electron picks it up automatically.
+
+require "bundler/setup"
+require "jwt"
+
+env_path = File.join(__dir__, "..", ".env")
+
+# Parse .env manually (no dotenv gem needed).
+env_vars = File.readlines(env_path, chomp: true).each_with_object({}) do |line, h|
+  next if line.strip.empty? || line.start_with?("#")
+  k, v = line.split("=", 2)
+  h[k.strip] = v&.strip
+end
+
+secret = ENV["JWT_SECRET"] || env_vars["JWT_SECRET"] ||
+         abort("JWT_SECRET not set in .env or environment")
+
+payload = {
+  sub:  "dev",
+  role: "admin",
+  iat:  Time.now.to_i,
+  # 100-year expiry — effectively never expires for dev use
+  exp:  Time.now.to_i + (100 * 365 * 24 * 3600),
+}
+
+token = JWT.encode(payload, secret, "HS256")
+
+content = File.read(env_path)
+if content.match?(/^DEV_JWT=/)
+  content = content.sub(/^DEV_JWT=.*$/, "DEV_JWT=#{token}")
+else
+  content += "\nDEV_JWT=#{token}\n"
+end
+
+File.write(env_path, content)
+puts "DEV_JWT written to .env"
+puts token

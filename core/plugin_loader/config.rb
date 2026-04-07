@@ -27,7 +27,7 @@ module PluginLoader
   module Config
     LOGGER = AppLogger.logger
 
-    RULE_TYPES = %w[filesystem_resource url_resource].freeze
+    RULE_TYPES = %w[filesystem_resource url_resource tagger].freeze
 
     class << self
       def load_all!
@@ -65,6 +65,7 @@ module PluginLoader
         case type
         when "filesystem_resource" then FilesystemPlugin.new(config)
         when "url_resource"        then UrlPlugin.new(config)
+        when "tagger"              then TaggerPlugin.new(config)
         end
       end
     end
@@ -170,6 +171,51 @@ module PluginLoader
             DB.connection[:"#{name}_urls"].where(active: true).all
           end
         end
+      end
+    end
+    # ------------------------------------------------------------------
+    # Config-derived plugin: tagger
+    #
+    # A pure service plugin driven entirely by YAML rules — no DB table,
+    # no routes.  Rules are a list of {pattern, tag, plugin?} entries:
+    #
+    #   rules:
+    #     - pattern: '[RV]J\d{6,}'
+    #       tag: DLSite
+    #     - pattern: 'BJ\d{6,}'
+    #       tag: DLSite
+    #       plugin: ebook   # optional: restrict to one content plugin
+    #
+    # ------------------------------------------------------------------
+    class TaggerPlugin < BasePlugin
+      def initialize(config)
+        @config = config
+        @rules  = Array(config[:rules]).map do |r|
+          { pattern: r[:pattern].to_s, tag: r[:tag].to_s, plugin: r[:plugin]&.to_s }
+        end
+      end
+
+      def name         = @config[:name].to_s
+      def version      = @config[:version]&.to_s || "1.0.0"
+      def capabilities = [:tagging]
+      def taggable?    = false
+
+      # Apply all rules to the resource; return true if any new tags were added.
+      def run!(resource)
+        existing = Array(resource.tags)
+        new_tags = @rules.each_with_object([]) do |rule, acc|
+          next if rule[:plugin] && rule[:plugin] != resource.plugin.to_s
+          acc << rule[:tag] if resource.name.match?(Regexp.new(rule[:pattern]))
+        rescue RegexpError
+          # skip malformed patterns silently
+        end
+
+        added = new_tags - existing
+        return false if added.empty?
+
+        resource.set(tags: existing + added)
+        resource.save_changes
+        true
       end
     end
   end

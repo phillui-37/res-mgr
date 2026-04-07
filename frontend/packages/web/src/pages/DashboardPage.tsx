@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { resourcesApi, pluginsApi, p2pApi } from "@/api/index.ts";
 import { LoadingScreen } from "@/components/ui/Spinner.tsx";
 import { Badge } from "@/components/ui/Badge.tsx";
 
 export function DashboardPage() {
+  const { t } = useTranslation();
   const resources = useQuery({
     queryKey: ["resources", "count"],
     queryFn: () => resourcesApi.list({ per_page: 1 }),
@@ -20,14 +22,14 @@ export function DashboardPage() {
   if (resources.isLoading) return <LoadingScreen />;
 
   const stats = [
-    { label: "Total Resources", value: resources.data?.total ?? 0, color: "purple" as const },
-    { label: "Plugins Loaded", value: plugins.data?.length ?? 0, color: "blue" as const },
-    { label: "Active P2P Rooms", value: rooms.data?.length ?? 0, color: "green" as const },
+    { label: t("dashboard.stats.totalResources"), value: resources.data?.total ?? 0, color: "purple" as const },
+    { label: t("dashboard.stats.pluginsLoaded"), value: plugins.data?.length ?? 0, color: "blue" as const },
+    { label: t("dashboard.stats.activePeerRooms"), value: rooms.data?.length ?? 0, color: "green" as const },
   ];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold text-gray-100 mb-6">Dashboard</h1>
+      <h1 className="text-2xl font-bold text-gray-100 mb-6">{t("dashboard.title")}</h1>
 
       <div className="grid grid-cols-3 gap-4 mb-8">
         {stats.map(({ label, value, color }) => (
@@ -42,7 +44,7 @@ export function DashboardPage() {
       </div>
 
       <section className="mb-6">
-        <h2 className="text-lg font-semibold text-gray-200 mb-3">Loaded Plugins</h2>
+        <h2 className="text-lg font-semibold text-gray-200 mb-3">{t("dashboard.loadedPlugins")}</h2>
         <div className="grid grid-cols-3 gap-3">
           {plugins.data?.map((p) => (
             <div key={p.name} className="bg-gray-900 rounded-lg p-4 border border-gray-800">

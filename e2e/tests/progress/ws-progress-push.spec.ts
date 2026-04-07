@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { createResource, saveProgress } from "../../fixtures/api.ts";
 import { connectHub } from "../../fixtures/ws.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("WebSocket progress push", () => {
+  test.afterAll(cleanupTestData);
+
   test("receives music progress event via WS", async () => {
     const r = await createResource({
       name: "e2e-ws-music",

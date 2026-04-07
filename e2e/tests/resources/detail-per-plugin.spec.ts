@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { createResource } from "../../fixtures/api.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("Resource detail per plugin type", () => {
+  test.afterAll(cleanupTestData);
+
   test("ebook detail shows EbookViewer reference", async ({ page }) => {
     const r = await createResource({
       name: "e2e-ebook-detail",

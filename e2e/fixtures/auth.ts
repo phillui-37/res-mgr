@@ -16,6 +16,10 @@ export function generateJwt(
 }
 
 export function buildStorageState(token: string) {
+  const deviceStore = JSON.stringify({
+    state: { deviceName: "playwright-e2e" },
+    version: 0,
+  });
   return {
     cookies: [] as never[],
     origins: [
@@ -24,6 +28,7 @@ export function buildStorageState(token: string) {
         localStorage: [
           { name: "jwt", value: token },
           { name: "apiUrl", value: BACKEND_URL },
+          { name: "device-store", value: deviceStore },
         ],
       },
     ],

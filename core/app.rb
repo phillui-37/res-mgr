@@ -33,6 +33,16 @@ module Core
         throw :halt, WS_HUB.call(env)
       end
 
+      # ── Device identity ─────────────────────────────────────────────────────
+      r.on "devices" do
+        DeviceController.call(r)
+      end
+
+      # ── Series management ───────────────────────────────────────────────────
+      r.on "series" do
+        SeriesController.call(r)
+      end
+
       # ── Plugin management ───────────────────────────────────────────────────
       r.on "plugins" do
         PluginController.call(r)

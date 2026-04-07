@@ -55,7 +55,23 @@ async function globalSetup(): Promise<void> {
     }
   }
 
-  // 3. Generate authenticated storageState
+  // 3. Register the shared e2e test device (required for IdentityGate to pass)
+  try {
+    const setupToken = generateJwt("e2e-setup", "5m");
+    await fetch(`${backendUrl}/devices`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: `Bearer ${setupToken}`,
+      },
+      body: new URLSearchParams({ name: "playwright-e2e" }).toString(),
+    });
+    console.log("[e2e setup] Test device registered");
+  } catch (e) {
+    console.warn("[e2e setup] Could not register test device:", (e as Error).message);
+  }
+
+  // 4. Generate authenticated storageState
   fs.mkdirSync(AUTH_DIR, { recursive: true });
   const token = generateJwt("e2e-test-user", "2h");
   const state = buildStorageState(token);

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import { resourcesApi } from "@/api/index.ts";
 import { Button } from "@/components/ui/Button.tsx";
 import type { ProgressRecord } from "@/types/index.ts";
@@ -11,6 +12,7 @@ interface ProgressPanelProps {
 
 export function ProgressPanel({ plugin, resourceId, records }: ProgressPanelProps) {
   const qc = useQueryClient();
+  const { t } = useTranslation();
 
   const save = useMutation({
     mutationFn: (data: Partial<ProgressRecord>) =>
@@ -24,7 +26,7 @@ export function ProgressPanel({ plugin, resourceId, records }: ProgressPanelProp
   return (
     <section>
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-sm font-semibold text-gray-400">Progress</h2>
+        <h2 className="text-sm font-semibold text-gray-400">{t("detail.progress")}</h2>
         <Button
           size="sm"
           variant="secondary"
@@ -36,7 +38,7 @@ export function ProgressPanel({ plugin, resourceId, records }: ProgressPanelProp
           }
           disabled={save.isPending}
         >
-          Save current
+          {t("progress.saveCurrent")}
         </Button>
       </div>
 
@@ -51,7 +53,7 @@ export function ProgressPanel({ plugin, resourceId, records }: ProgressPanelProp
           </div>
           {latest.current_page && (
             <div className="text-gray-500 text-xs">
-              Page {latest.current_page} / {latest.total_pages}
+              {t("progress.page", { current: latest.current_page, total: latest.total_pages })}
             </div>
           )}
           {latest.position_ms != null && (
@@ -59,10 +61,10 @@ export function ProgressPanel({ plugin, resourceId, records }: ProgressPanelProp
               {Math.floor(latest.position_ms / 60000)}:{String(Math.floor((latest.position_ms / 1000) % 60)).padStart(2, "0")} / {Math.floor((latest.duration_ms ?? 0) / 60000)}:{String(Math.floor(((latest.duration_ms ?? 0) / 1000) % 60)).padStart(2, "0")}
             </div>
           )}
-          <div className="text-gray-600 text-xs mt-1">Device: {latest.device}</div>
+          <div className="text-gray-600 text-xs mt-1">{t("progress.device", { name: latest.device })}</div>
         </div>
       ) : (
-        <div className="text-gray-600 text-xs py-3">No progress recorded yet.</div>
+        <div className="text-gray-600 text-xs py-3">{t("progress.none")}</div>
       )}
     </section>
   );

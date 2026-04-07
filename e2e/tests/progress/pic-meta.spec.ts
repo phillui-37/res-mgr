@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { createResource, saveProgress, getProgress } from "../../fixtures/api.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("Pic meta", () => {
+  test.afterAll(cleanupTestData);
+
   test("saves pic metadata via API", async () => {
     const r = await createResource({
       name: "e2e-pic-meta",

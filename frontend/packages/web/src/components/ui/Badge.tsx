@@ -1,6 +1,7 @@
 interface BadgeProps {
   label: string;
   color?: "purple" | "blue" | "green" | "yellow" | "red" | "gray";
+  "data-testid"?: string;
 }
 
 const COLOR_MAP: Record<NonNullable<BadgeProps["color"]>, string> = {
@@ -12,9 +13,12 @@ const COLOR_MAP: Record<NonNullable<BadgeProps["color"]>, string> = {
   gray: "bg-gray-800 text-gray-400",
 };
 
-export function Badge({ label, color = "gray" }: BadgeProps) {
+export function Badge({ label, color = "gray", "data-testid": testId }: BadgeProps) {
   return (
-    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${COLOR_MAP[color]}`}>
+    <span
+      className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${COLOR_MAP[color]}`}
+      data-testid={testId}
+    >
       {label}
     </span>
   );

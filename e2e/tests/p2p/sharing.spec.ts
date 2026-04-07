@@ -4,8 +4,11 @@ import {
   createResource,
   shareResource,
 } from "../../fixtures/api.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("P2P Resource Sharing", () => {
+  test.afterAll(cleanupTestData);
+
   test("share a resource into a room", async ({ page }) => {
     const room = await createRoom("e2e-share-room");
     const resource = await createResource({

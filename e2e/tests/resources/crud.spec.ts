@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { createResource, seedResources } from "../../fixtures/api.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("Resource CRUD", () => {
+  test.afterAll(cleanupTestData);
+
   test("list page shows seeded resources", async ({ page }) => {
     await page.goto("/resources");
     await expect(page.locator("h1")).toHaveText("Resources");

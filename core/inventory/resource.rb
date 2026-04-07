@@ -8,9 +8,17 @@ class Resource < Sequel::Model
   plugin :timestamps, update_on_create: true
 
   # JSON-encoded columns deserialized on access.
+  # Supports both legacy plain-string locations and structured {device, path} objects.
   def locations
     val = super
-    val ? JSON.parse(val) : []
+    return [] unless val
+
+    JSON.parse(val).map do |entry|
+      case entry
+      when Hash then entry
+      when String then { "device" => "unknown", "path" => entry }
+      end
+    end.compact
   end
 
   def locations=(arr)
@@ -42,6 +50,7 @@ class Resource < Sequel::Model
       locations:  locations,
       tags:       tags,
       checksum:   checksum,
+      language:   language,
       active:     active,
       created_at: created_at&.iso8601,
       updated_at: updated_at&.iso8601

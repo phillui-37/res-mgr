@@ -4,7 +4,9 @@
   "version": "0.1.0",
   "main": "src/main.cjs",
   "scripts": {
-    "dev": "concurrently -k \"pnpm --filter @res-mgr/web dev\" \"wait-on http://localhost:5173 && electron .\"",
+    "postinstall": "node node_modules/electron/install.js",
+    "dev": "pnpm --filter @res-mgr/web build && electron .",
+    "dev:watch": "concurrently -k \"pnpm --filter @res-mgr/web build --watch\" \"wait-on ../web/dist/index.html && electron .\"",
     "build": "electron-builder",
     "typecheck": "tsc --noEmit"
   },
@@ -25,12 +27,19 @@
       "buildResources": "assets",
       "output": "dist"
     },
-    "mac": { "target": "dmg" },
-    "linux": { "target": "AppImage" },
-    "win": { "target": "nsis" }
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "dependencies": {
-    "@res-mgr/web": "workspace:*"
+    "@res-mgr/web": "workspace:*",
+    "dotenv": "^17.4.0"
   },
   "devDependencies": {
     "@types/node": "^24.12.0",

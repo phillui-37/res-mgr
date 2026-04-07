@@ -1,8 +1,11 @@
 import { test, expect } from "@playwright/test";
 import { createResource, saveProgress, getProgress } from "../../fixtures/api.ts";
 import { generateJwt } from "../../fixtures/auth.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("Game meta", () => {
+  test.afterAll(cleanupTestData);
+
   test("saves game metadata via API", async () => {
     const r = await createResource({
       name: "e2e-game-meta",

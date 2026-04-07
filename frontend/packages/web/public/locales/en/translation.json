@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "resources": "Resources",
+    "batchImport": "Batch Import",
+    "conflicts": "Conflicts",
+    "series": "Series",
+    "p2p": "P2P Rooms",
+    "settings": "Settings"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "stats": {
+      "totalResources": "Total Resources",
+      "pluginsLoaded": "Plugins Loaded",
+      "activePeerRooms": "Active P2P Rooms"
+    },
+    "loadedPlugins": "Loaded Plugins"
+  },
+  "resources": {
+    "title": "Resources",
+    "addResource": "+ Add Resource",
+    "count": "{{count}} resources",
+    "noResults": "No resources found.",
+    "batchDelete": "🗑 Delete ({{count}})",
+    "batchDeleting": "Deleting…",
+    "confirmBatchDelete": "Delete {{count}} selected resource(s)? This cannot be undone.",
+    "tabs": {
+      "all": "All",
+      "ebook": "Ebook",
+      "music": "Music",
+      "video": "Video",
+      "game": "Game",
+      "pic": "Pic",
+      "online_viewer": "Online Viewer"
+    },
+    "filter": {
+      "searchPlaceholder": "Search by name…",
+      "languagePlaceholder": "Language…"
+    },
+    "columns": {
+      "name": "Name",
+      "plugin": "Plugin",
+      "language": "Language",
+      "locations": "Locations",
+      "updated": "Updated"
+    },
+    "locationCount": "{{count}} location(s)",
+    "pagination": {
+      "prev": "← Prev",
+      "next": "Next →",
+      "page": "Page {{current}} / {{total}}",
+      "perPage": "Per page:"
+    }
+  },
+  "detail": {
+    "previewNotAvailable": "Preview not available",
+    "loadingCover": "Loading cover…",
+    "delete": "Delete",
+    "confirmDelete": "Delete this resource?",
+    "deleting": "Deleting…",
+    "locations": "Locations",
+    "noLocations": "No locations recorded.",
+    "progress": "Progress",
+    "metadata": "Metadata",
+    "notFound": "Resource not found."
+  },
+  "form": {
+    "title": "Add Resource",
+    "name": "Name",
+    "plugin": "Plugin",
+    "location": "Location (drag & drop, browse, or type)",
+    "locationWeb": "Location (optional)",
+    "locationPlaceholder": "/mnt/nas/books/example.epub",
+    "locationIdentity": "Location identity",
+    "browse": "Browse…",
+    "dropHint": "Drop to set location",
+    "dropHintExtract": "Drop to set location + extract metadata",
+    "extractFile": "Extract metadata from local file",
+    "extractHint": "(auto-fills fields below)",
+    "extracting": "Extracting metadata…",
+    "metadata": "Metadata",
+    "language": "Language (optional)",
+    "languagePlaceholder": "en, ja, zh…",
+    "create": "Create",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "error": "Failed to create resource."
+  },
+  "batch": {
+    "title": "Batch Import",
+    "clearAll": "Clear all",
+    "selectFiles": "📄 Select Files…",
+    "selectDirectory": "📁 Select Directory…",
+    "dragHint": "or drag & drop files here",
+    "startImport": "▶ Start Import ({{count}} pending)",
+    "stop": "⏹ Stop",
+    "locationIdentity": "Location identity",
+    "files": "{{count}} file",
+    "files_other": "{{count}} files",
+    "summary": "— {{done}} done · {{error}} error(s) · {{skipped}} skipped",
+    "log": "Log",
+    "logTail": "(showing last {{n}} lines — full log in file)",
+    "openLogDir": "Open log folder",
+    "clearLog": "clear log",
+    "electronOnly": "Batch import requires the Electron desktop app.",
+    "status": {
+      "pending": "pending",
+      "processing": "processing",
+      "done": "done",
+      "error": "error",
+      "skipped": "skipped"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "apiUrl": "Backend API URL",
+    "jwtToken": "JWT Token",
+    "save": "Save",
+    "saved": "Saved ✓",
+    "logout": "Log out",
+    "deviceIdentity": "Device Identity",
+    "deviceHint": "Register this device so progress records are attributed correctly.",
+    "deviceCurrent": "Current: ",
+    "deviceName": "Device Name",
+    "devicePlaceholder": "my-laptop, living-room-tv…",
+    "registerDevice": "Register Device",
+    "registered": "Registered ✓",
+    "registerError": "Failed to register device. Is the backend reachable?",
+    "reclaim": {
+      "prompt": "\"{{name}}\" is already registered. Reclaim this identity for the current device?",
+      "confirm": "Yes, Reclaim",
+      "cancel": "Cancel"
+    },
+    "storageIdentities": "Portable Storage Identities",
+    "storageHint": "Hardware identities saved for portable drives, detected automatically when you set a location.",
+    "noStorages": "No portable storage identities saved yet.",
+    "removeStorage": "Remove",
+    "jwtHint": "The JWT token is stored in localStorage.",
+    "jwtHint2": "To generate a token, use your backend's GET /health endpoint or a JWT tool.",
+    "language": "Language"
+  },
+  "conflicts": {
+    "title": "Resource Conflicts",
+    "subtitle": "Duplicate resources detected by file checksum. Keep the canonical copy and remove duplicates.",
+    "noConflicts": "No conflicts found",
+    "noConflictsHint": "All resources are unique.",
+    "count": "{{count}} duplicate group(s) found",
+    "columns": {
+      "name": "Name",
+      "plugin": "Plugin",
+      "location": "Location",
+      "updated": "Updated",
+      "actions": "Actions"
+    },
+    "keepOnly": "Keep only this",
+    "delete": "Delete",
+    "keeping": "…",
+    "deleting": "…"
+  },
+  "meta": {
+    "save": "Save",
+    "saving": "Saving…"
+  },
+  "progress": {
+    "saveCurrent": "Save current",
+    "page": "Page {{current}} / {{total}}",
+    "device": "Device: {{name}}",
+    "none": "No progress recorded yet."
+  },
+  "common": {
+    "loading": "Loading…",
+    "unknown": "—",
+    "error": "Something went wrong."
+  },
+  "identity": {
+    "thisDevice": "this device",
+    "custom": "Custom…",
+    "customLabel": "Custom identity",
+    "customPlaceholder": "my-usb-drive, portable-ssd…",
+    "hwDetected": "New storage detected: {{id}}",
+    "hwDetectedHint": "Give it a friendly name to reuse it in future imports.",
+    "saveName": "Storage name",
+    "saveNamePlaceholder": "my-usb-drive…",
+    "save": "Save",
+    "dismiss": "Dismiss"
+  }
+}

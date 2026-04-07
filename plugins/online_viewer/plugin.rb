@@ -32,6 +32,24 @@ class OnlineViewerPlugin < BasePlugin
             index :resource_id
           end
         end
+      },
+      {
+        version: 2,
+        table:   :online_viewer_meta,
+        up:      lambda do |db|
+          db.create_table?(:online_viewer_meta) do
+            primary_key :id
+            foreign_key :resource_id, :resources, null: false, on_delete: :cascade
+            String  :title
+            String  :description
+            String  :thumbnail_url
+            String  :original_url
+            String  :language
+            DateTime :updated_at, default: Sequel::CURRENT_TIMESTAMP
+
+            unique :resource_id
+          end
+        end
       }
     ]
   end
@@ -41,6 +59,8 @@ class OnlineViewerPlugin < BasePlugin
       r.on Integer do |resource_id|
         r.get("sessions")  { list_sessions(resource_id) }
         r.post("progress") { update_progress(resource_id, r) }
+        r.get("meta")      { get_meta(resource_id) }
+        r.post("meta")     { update_meta(resource_id, r) }
       end
 
       r.get { Resource.where(plugin: "online_viewer", active: true).map(&:to_api_h) }
@@ -84,6 +104,21 @@ class OnlineViewerPlugin < BasePlugin
       device: device, progress_pct: params["progress_pct"]&.to_i
     })
 
+    { ok: true }
+  end
+
+  OV_META_FIELDS = %w[title description thumbnail_url original_url language].freeze
+
+  def get_meta(resource_id)
+    DB.connection[:online_viewer_meta].where(resource_id: resource_id).first || {}
+  end
+
+  def update_meta(resource_id, r)
+    attrs = OV_META_FIELDS.each_with_object({}) { |k, h| h[k.to_sym] = r.POST[k] if r.POST.key?(k) }
+    DB.connection[:online_viewer_meta].insert_conflict(
+      target: :resource_id,
+      update: attrs.merge(updated_at: Sequel::CURRENT_TIMESTAMP)
+    ).insert(attrs.merge(resource_id: resource_id))
     { ok: true }
   end
 end

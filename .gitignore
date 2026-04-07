@@ -24,3 +24,6 @@ tmp/
 .idea/
 .vscode/
 *.swp
+
+# ai cache
+.superpowers/

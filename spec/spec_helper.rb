@@ -42,9 +42,12 @@ RSpec.configure do |config|
     DB.connection.transaction(rollback: :always, savepoint: true) { example.run }
   end
 
-  # Clean test DB file after the full suite.
+  # Clean test DB files after the full suite (SQLite WAL mode creates companion files).
   config.after(:suite) do
+    DB.connection.disconnect
     db_path = File.expand_path("../db/test.sqlite3", __dir__)
-    File.delete(db_path) if File.exist?(db_path)
+    %W[#{db_path} #{db_path}-wal #{db_path}-shm].each do |f|
+      File.delete(f) if File.exist?(f)
+    end
   end
 end

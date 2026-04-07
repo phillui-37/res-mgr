@@ -28,6 +28,32 @@ class MusicPlugin < BasePlugin
             index :resource_id
           end
         end
+      },
+      {
+        version: 2,
+        table:   :music_meta,
+        up:      lambda do |db|
+          db.create_table?(:music_meta) do
+            primary_key :id
+            foreign_key :resource_id, :resources, null: false, on_delete: :cascade
+            String  :artist
+            String  :album_artist
+            String  :album
+            Integer :track_number
+            Integer :disc_number
+            Integer :year
+            String  :genre
+            Integer :duration_ms
+            Integer :bitrate
+            Integer :sample_rate
+            String  :composer
+            String  :label
+            String  :isrc
+            DateTime :updated_at, default: Sequel::CURRENT_TIMESTAMP
+
+            unique :resource_id
+          end
+        end
       }
     ]
   end
@@ -37,6 +63,8 @@ class MusicPlugin < BasePlugin
       r.on Integer do |resource_id|
         r.get("progress")  { get_progress(resource_id) }
         r.post("progress") { update_progress(resource_id, r) }
+        r.get("meta")      { get_meta(resource_id) }
+        r.post("meta")     { update_meta(resource_id, r) }
       end
 
       r.get { Resource.where(plugin: "music", active: true).map(&:to_api_h) }
@@ -68,6 +96,25 @@ class MusicPlugin < BasePlugin
       resource_id: resource_id, device: device, position_ms: params["position_ms"]&.to_i
     })
 
+    { ok: true }
+  end
+
+  MUSIC_META_FIELDS = %w[artist album_artist album track_number disc_number year genre duration_ms bitrate sample_rate composer label isrc].freeze
+
+  def get_meta(resource_id)
+    DB.connection[:music_meta].where(resource_id: resource_id).first || {}
+  end
+
+  def update_meta(resource_id, r)
+    int_fields = %w[track_number disc_number year duration_ms bitrate sample_rate]
+    attrs = MUSIC_META_FIELDS.each_with_object({}) do |k, h|
+      next unless r.POST.key?(k)
+      h[k.to_sym] = int_fields.include?(k) ? r.POST[k]&.to_i : r.POST[k]
+    end
+    DB.connection[:music_meta].insert_conflict(
+      target: :resource_id,
+      update: attrs.merge(updated_at: Sequel::CURRENT_TIMESTAMP)
+    ).insert(attrs.merge(resource_id: resource_id))
     { ok: true }
   end
 end

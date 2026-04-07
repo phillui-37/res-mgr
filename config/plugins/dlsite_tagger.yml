@@ -1,0 +1,11 @@
+name: dlsite_tagger
+version: "1.0.0"
+type: tagger
+
+# Rules are evaluated against every taggable resource's name on create/update.
+# pattern: Ruby regex (string) matched against resource name
+# tag:     tag string applied when pattern matches
+# plugin:  (optional) restrict rule to a single content plugin; omit for all plugins
+rules:
+  - pattern: '[RV]J\d{6,}'
+    tag: DLSite

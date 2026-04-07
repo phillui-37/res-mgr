@@ -30,6 +30,8 @@ export interface CreateResourceParams {
   plugin: string;
   type?: string;
   locations?: string[];
+  language?: string;
+  tags?: string[];
 }
 
 export async function createResource(data: CreateResourceParams) {
@@ -48,7 +50,24 @@ export async function createResource(data: CreateResourceParams) {
     plugin: string;
     type: string;
     locations: string[];
+    language: string | null;
   }>;
+}
+
+export async function listResources(query?: string) {
+  const c = await ctx();
+  const url = query ? `/resources?q=${encodeURIComponent(query)}` : "/resources";
+  const res = await c.get(url);
+  if (!res.ok()) throw new Error(`listResources failed: ${res.status()}`);
+  return res.json() as Promise<Array<{ id: number; name: string; plugin: string }>>;
+}
+
+export async function listSeries(plugin?: string) {
+  const c = await ctx();
+  const url = plugin ? `/series?plugin=${encodeURIComponent(plugin)}` : "/series";
+  const res = await c.get(url);
+  if (!res.ok()) throw new Error(`listSeries failed: ${res.status()}`);
+  return res.json() as Promise<Array<{ id: number; name: string; plugin: string }>>;
 }
 
 export async function getResource(id: number) {
@@ -161,4 +180,73 @@ export async function healthCheck(): Promise<boolean> {
   } catch {
     return false;
   }
+}
+
+export async function getPluginMeta(plugin: string, resourceId: number) {
+  const c = await ctx();
+  const res = await c.get(`/resources/${plugin}/${resourceId}/meta`);
+  if (!res.ok()) throw new Error(`getPluginMeta failed: ${res.status()}`);
+  return res.json() as Promise<Record<string, unknown>>;
+}
+
+export async function postPluginMeta(
+  plugin: string,
+  resourceId: number,
+  data: Record<string, unknown>,
+) {
+  const c = await ctx();
+  const res = await c.post(`/resources/${plugin}/${resourceId}/meta`, { data });
+  if (!res.ok()) throw new Error(`postPluginMeta failed: ${res.status()} ${await res.text()}`);
+  return res.json();
+}
+
+export async function createSeries(name: string, plugin: string) {
+  const c = await ctx();
+  const res = await c.post("/series", { data: { name, plugin } });
+  if (!res.ok()) throw new Error(`createSeries failed: ${res.status()}`);
+  return res.json() as Promise<{ id: number; name: string; plugin: string }>;
+}
+
+export async function addResourceToSeries(seriesId: number, resourceId: number) {
+  const c = await ctx();
+  const res = await c.post(`/series/${seriesId}/resources`, { data: { resource_id: resourceId } });
+  if (!res.ok()) throw new Error(`addResourceToSeries failed: ${res.status()}`);
+  return res.json();
+}
+
+export async function getSeries(seriesId: number) {
+  const c = await ctx();
+  const res = await c.get(`/series/${seriesId}`);
+  if (!res.ok()) throw new Error(`getSeries failed: ${res.status()}`);
+  return res.json() as Promise<{ id: number; name: string; plugin: string; resources: Array<{ id: number }> }>;
+}
+
+export async function deleteSeries(seriesId: number) {
+  const c = await ctx();
+  const res = await c.delete(`/series/${seriesId}`);
+  if (!res.ok()) throw new Error(`deleteSeries failed: ${res.status()}`);
+  return res.json();
+}
+
+export async function registerDevice(name: string) {
+  const c = await ctx();
+  const res = await c.post("/devices", { data: { name } });
+  if (!res.ok() && res.status() !== 200 && res.status() !== 201) {
+    throw new Error(`registerDevice failed: ${res.status()} ${await res.text()}`);
+  }
+  return { status: res.status(), body: (await res.json()) as { id: number; name: string; created_at: string } };
+}
+
+export async function listDevices() {
+  const c = await ctx();
+  const res = await c.get("/devices");
+  if (!res.ok()) throw new Error(`listDevices failed: ${res.status()}`);
+  return res.json() as Promise<Array<{ id: number; name: string; created_at: string }>>;
+}
+
+export async function deleteDevice(name: string) {
+  const c = await ctx();
+  const res = await c.delete(`/devices/${encodeURIComponent(name)}`);
+  if (!res.ok()) throw new Error(`deleteDevice failed: ${res.status()}`);
+  return res.json();
 }

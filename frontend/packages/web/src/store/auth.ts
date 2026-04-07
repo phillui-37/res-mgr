@@ -10,8 +10,11 @@ interface AuthState {
 }
 
 export const useAuthStore = create<AuthState>()((set) => ({
-  jwt: localStorage.getItem("jwt"),
-  apiUrl: localStorage.getItem("apiUrl") || "http://localhost:9292",
+  jwt: window.electron?.devJwt || localStorage.getItem("jwt") || null,
+  apiUrl:
+    localStorage.getItem("apiUrl") ||
+    window.electron?.apiUrl ||
+    "http://localhost:3000",
   setJwt: (jwt) => {
     localStorage.setItem("jwt", jwt);
     set({ jwt });

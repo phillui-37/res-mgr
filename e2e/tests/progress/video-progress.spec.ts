@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import { createResource, saveProgress } from "../../fixtures/api.ts";
+import { cleanupTestData } from "../../fixtures/cleanup.ts";
 
 test.describe("Video progress", () => {
+  test.afterAll(cleanupTestData);
+
   test("saves and displays time progress in mm:ss format", async ({ page }) => {
     const r = await createResource({
       name: "e2e-video-progress",

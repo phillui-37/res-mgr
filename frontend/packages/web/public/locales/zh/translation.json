@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "dashboard": "仪表板",
+    "resources": "资源",
+    "batchImport": "批量导入",
+    "conflicts": "冲突",
+    "series": "系列",
+    "p2p": "P2P 房间",
+    "settings": "设置"
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "stats": {
+      "totalResources": "资源总数",
+      "pluginsLoaded": "已加载插件",
+      "activePeerRooms": "活跃 P2P 房间"
+    },
+    "loadedPlugins": "已加载插件"
+  },
+  "resources": {
+    "title": "资源",
+    "addResource": "+ 添加资源",
+    "count": "{{count}} 个资源",
+    "noResults": "未找到资源。",
+    "batchDelete": "🗑 删除 ({{count}})",
+    "batchDeleting": "删除中…",
+    "confirmBatchDelete": "删除选中的 {{count}} 个资源？此操作不可撤销。",
+    "tabs": {
+      "all": "全部",
+      "ebook": "电子书",
+      "music": "音乐",
+      "video": "视频",
+      "game": "游戏",
+      "pic": "图片",
+      "online_viewer": "在线查看器"
+    },
+    "filter": {
+      "searchPlaceholder": "按名称搜索…",
+      "languagePlaceholder": "语言…"
+    },
+    "columns": {
+      "name": "名称",
+      "plugin": "插件",
+      "language": "语言",
+      "locations": "位置",
+      "updated": "更新时间"
+    },
+    "locationCount": "{{count}} 个位置",
+    "pagination": {
+      "prev": "← 上一页",
+      "next": "下一页 →",
+      "page": "第 {{current}} / {{total}} 页",
+      "perPage": "每页："
+    }
+  },
+  "detail": {
+    "previewNotAvailable": "预览不可用",
+    "loadingCover": "加载封面中…",
+    "delete": "删除",
+    "confirmDelete": "删除此资源？",
+    "deleting": "删除中…",
+    "locations": "位置",
+    "noLocations": "未记录位置。",
+    "progress": "进度",
+    "metadata": "元数据",
+    "notFound": "资源未找到。"
+  },
+  "form": {
+    "title": "添加资源",
+    "name": "名称",
+    "plugin": "插件",
+    "location": "位置（拖放、浏览或手动输入）",
+    "locationWeb": "位置（可选）",
+    "locationPlaceholder": "/mnt/nas/books/example.epub",
+    "locationIdentity": "位置身份",
+    "browse": "浏览…",
+    "dropHint": "拖放以设置位置",
+    "dropHintExtract": "拖放以设置位置并提取元数据",
+    "extractFile": "从本地文件提取元数据",
+    "extractHint": "（自动填充下方字段）",
+    "extracting": "正在提取元数据…",
+    "metadata": "元数据",
+    "language": "语言（可选）",
+    "languagePlaceholder": "en, ja, zh…",
+    "create": "创建",
+    "saving": "保存中…",
+    "cancel": "取消",
+    "error": "创建资源失败。"
+  },
+  "batch": {
+    "title": "批量导入",
+    "clearAll": "清除全部",
+    "selectFiles": "📄 选择文件…",
+    "selectDirectory": "📁 选择目录…",
+    "dragHint": "或将文件拖放到此处",
+    "startImport": "▶ 开始导入（{{count}} 个待处理）",
+    "stop": "⏹ 停止",
+    "locationIdentity": "位置身份",
+    "files": "{{count}} 个文件",
+    "files_other": "{{count}} 个文件",
+    "summary": "— {{done}} 完成 · {{error}} 错误 · {{skipped}} 跳过",
+    "log": "日志",
+    "logTail": "（显示最近 {{n}} 行 — 完整日志保存至文件）",
+    "openLogDir": "打开日志目录",
+    "clearLog": "清除日志",
+    "electronOnly": "批量导入需要 Electron 桌面应用。",
+    "status": {
+      "pending": "待处理",
+      "processing": "处理中",
+      "done": "完成",
+      "error": "错误",
+      "skipped": "已跳过"
+    }
+  },
+  "settings": {
+    "title": "设置",
+    "apiUrl": "后端 API 地址",
+    "jwtToken": "JWT Token",
+    "save": "保存",
+    "saved": "已保存 ✓",
+    "logout": "退出登录",
+    "deviceIdentity": "设备身份",
+    "deviceHint": "注册此设备，使进度记录正确归属。",
+    "deviceCurrent": "当前：",
+    "deviceName": "设备名称",
+    "devicePlaceholder": "my-laptop, living-room-tv…",
+    "registerDevice": "注册设备",
+    "registered": "已注册 ✓",
+    "registerError": "注册设备失败，后端是否可达？",
+    "reclaim": {
+      "prompt": "\"{{name}}\" 已被注册，是否将此身份重新绑定到当前设备？",
+      "confirm": "确认重绑",
+      "cancel": "取消"
+    },
+    "storageIdentities": "便携存储身份",
+    "storageHint": "设置位置时自动检测到的硬件存储身份，便于便携硬盘复用。",
+    "noStorages": "尚未保存任何便携存储身份。",
+    "removeStorage": "删除",
+    "jwtHint": "JWT token 存储在 localStorage 中。",
+    "jwtHint2": "可通过后端 GET /health 接口或 JWT 工具生成 token。",
+    "language": "语言"
+  },
+  "conflicts": {
+    "title": "资源冲突",
+    "subtitle": "通过文件校验和检测到重复资源，保留正版，删除副本。",
+    "noConflicts": "未发现冲突",
+    "noConflictsHint": "所有资源均唯一。",
+    "count": "发现 {{count}} 组重复",
+    "columns": {
+      "name": "名称",
+      "plugin": "插件",
+      "location": "位置",
+      "updated": "更新时间",
+      "actions": "操作"
+    },
+    "keepOnly": "仅保留此项",
+    "delete": "删除",
+    "keeping": "…",
+    "deleting": "…"
+  },
+  "meta": {
+    "save": "保存",
+    "saving": "保存中…"
+  },
+  "progress": {
+    "saveCurrent": "保存当前进度",
+    "page": "第 {{current}} / {{total}} 页",
+    "device": "设备：{{name}}",
+    "none": "暂无进度记录。"
+  },
+  "common": {
+    "loading": "加载中…",
+    "unknown": "—",
+    "error": "出现错误。"
+  },
+  "identity": {
+    "thisDevice": "本设备",
+    "custom": "自定义…",
+    "customLabel": "自定义身份",
+    "customPlaceholder": "my-usb-drive, portable-ssd…",
+    "hwDetected": "检测到新存储：{{id}}",
+    "hwDetectedHint": "为其命名，以便后续导入时复用。",
+    "saveName": "存储名称",
+    "saveNamePlaceholder": "my-usb-drive…",
+    "save": "保存",
+    "dismiss": "忽略"
+  }
+}

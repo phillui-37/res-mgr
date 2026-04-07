@@ -13,7 +13,7 @@
 #   #schema_migrations → Array<Proc>  each proc is a Sequel migration block
 #   #routes(r)        → void    mount routes onto the Roda request object
 class BasePlugin
-  CAPABILITIES = %i[inventory viewer progress stream].freeze
+  CAPABILITIES = %i[inventory viewer progress stream tagging].freeze
 
   # Unique snake_case name (must be overridden).
   def name
@@ -41,6 +41,14 @@ class BasePlugin
   # Default: no routes.
   def routes(_r)
     nil
+  end
+
+  # Whether this plugin's resources should be auto-tagged by TaggerPlugin.
+  # Any plugin that manages inventory (declares :inventory capability) is
+  # taggable by default. Pure service plugins (e.g. TaggerPlugin itself)
+  # return false and are never auto-tagged.
+  def taggable?
+    Array(capabilities).include?(:inventory)
   end
 
   # Called once after the plugin is loaded and its migrations run.

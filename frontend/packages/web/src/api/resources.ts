@@ -1,6 +1,6 @@
 import type { AxiosResponse } from "axios";
 import { http } from "./client.ts";
-import type { Resource, ProgressRecord, ResourceFilter, PaginatedResponse } from "@/types/index.ts";
+import type { Resource, ProgressRecord, ResourceFilter, PaginatedResponse, DuplicateGroup } from "@/types/index.ts";
 
 function parsePagination<T>(res: AxiosResponse<T[]>): PaginatedResponse<T> {
   return {
@@ -13,8 +13,14 @@ function parsePagination<T>(res: AxiosResponse<T[]>): PaginatedResponse<T> {
 
 export const resourcesApi = {
   list(filter: ResourceFilter = {}) {
+    const { meta_cond, ...rest } = filter;
+    const params = new URLSearchParams();
+    (Object.entries(rest) as [string, unknown][]).forEach(([k, v]) => {
+      if (v !== undefined && v !== null && v !== "") params.append(k, String(v));
+    });
+    meta_cond?.forEach((c) => params.append("meta_cond[]", c));
     return http
-      .get<Resource[]>("/resources", { params: filter })
+      .get<Resource[]>("/resources", { params })
       .then(parsePagination);
   },
 
@@ -30,8 +36,28 @@ export const resourcesApi = {
     return http.patch<Resource>(`/resources/${id}`, data).then((r) => r.data);
   },
 
+  duplicates() {
+    return http.get<DuplicateGroup[]>("/resources/duplicates").then((r) => r.data);
+  },
+
+  computeChecksum(id: number) {
+    return http.post<{ id: number; checksum: string }>(`/resources/${id}/checksum`).then((r) => r.data);
+  },
+
+  removeRequest(id: number) {
+    return http
+      .post<{ status: string; resource_id: number }>(`/resources/${id}/remove-request`)
+      .then((r) => r.data);
+  },
+
   remove(id: number) {
     return http.delete(`/resources/${id}`).then((r) => r.data);
+  },
+
+  bulkRemove(ids: number[]) {
+    return http
+      .delete<{ deleted: number[]; count: number }>("/resources", { data: { ids } })
+      .then((r) => r.data);
   },
 
   // Plugin-scoped list (e.g. GET /resources/ebook)

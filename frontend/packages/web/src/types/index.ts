@@ -2,14 +2,20 @@
 
 export type PluginName = "ebook" | "music" | "video" | "game" | "pic" | "online_viewer";
 
+export interface ResourceLocation {
+  device: string;
+  path: string;
+}
+
 export interface Resource {
   id: number;
   name: string;
   type: string;
   plugin: PluginName;
-  locations: string[];
+  locations: ResourceLocation[];
   tags: string[];
   checksum: string | null;
+  language: string | null;
   active: boolean;
   created_at: string;
   updated_at: string;
@@ -49,6 +55,12 @@ export interface P2PRoom {
   ws_url?: string;
 }
 
+export interface DuplicateGroup {
+  checksum: string;
+  count: number;
+  resources: Resource[];
+}
+
 export interface PaginatedResponse<T> {
   data: T[];
   total: number;
@@ -63,6 +75,8 @@ export interface ApiError {
 export type ResourceFilter = {
   plugin?: PluginName;
   name?: string;
+  language?: string;
+  meta_cond?: string[]; // "plugin:field:value" each fuzzy-matched
   page?: number;
   per_page?: number;
 };
