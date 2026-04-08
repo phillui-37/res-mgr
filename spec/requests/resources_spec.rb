@@ -93,6 +93,63 @@ RSpec.describe "Resource endpoints", type: :request do
     end
   end
 
+  describe "PATCH /resources (batch update)" do
+    let!(:id_a) do
+      post_json "/resources", { name: "a.epub", type: "ebook", plugin: "ebook" }
+      json_body["id"]
+    end
+    let!(:id_b) do
+      post_json "/resources", { name: "b.mp3", type: "music", plugin: "music" }
+      json_body["id"]
+    end
+
+    it "updates multiple resources and returns 200 with all updated records" do
+      patch_json "/resources", {
+        updates: [
+          { id: id_a, name: "a_renamed.epub", tags: ["fiction"] },
+          { id: id_b, name: "b_renamed.mp3",  language: "ja" }
+        ]
+      }
+      expect(last_response.status).to eq(200)
+      bodies = json_body
+      expect(bodies.size).to eq(2)
+      a = bodies.find { |r| r["id"] == id_a }
+      b = bodies.find { |r| r["id"] == id_b }
+      expect(a["name"]).to eq("a_renamed.epub")
+      expect(a["tags"]).to eq(["fiction"])
+      expect(b["name"]).to eq("b_renamed.mp3")
+      expect(b["language"]).to eq("ja")
+    end
+
+    it "does not change the type field even when supplied" do
+      patch_json "/resources", { updates: [{ id: id_a, type: "video" }] }
+      expect(last_response.status).to eq(200)
+      expect(json_body.first["type"]).to eq("ebook")
+    end
+
+    it "returns 422 when updates[] is missing or empty" do
+      patch_json "/resources", { updates: [] }
+      expect(last_response.status).to eq(422)
+    end
+
+    it "returns 404 when any id does not exist" do
+      patch_json "/resources", { updates: [{ id: 999_999, name: "ghost.epub" }] }
+      expect(last_response.status).to eq(404)
+    end
+
+    it "returns 422 and does not persist any change when one entry is invalid" do
+      patch_json "/resources", {
+        updates: [
+          { id: id_a, name: "valid_name.epub" },
+          { id: id_b, name: "" }
+        ]
+      }
+      expect(last_response.status).to eq(422)
+      get_authed "/resources/#{id_a}"
+      expect(json_body["name"]).to eq("a.epub")
+    end
+  end
+
   describe "PATCH /resources/:id" do
     let!(:resource_id) do
       post_json "/resources", { name: "old.epub", type: "ebook", plugin: "ebook" }

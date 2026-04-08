@@ -24,6 +24,7 @@
     "noResults": "No resources found.",
     "batchDelete": "🗑 Delete ({{count}})",
     "batchDeleting": "Deleting…",
+    "batchEdit": "✏ Edit ({{count}})",
     "confirmBatchDelete": "Delete {{count}} selected resource(s)? This cannot be undone.",
     "tabs": {
       "all": "All",
@@ -110,6 +111,31 @@
       "done": "done",
       "error": "error",
       "skipped": "skipped"
+    }
+  },
+  "batchEdit": {
+    "title": "Batch Edit ({{count}})",
+    "save": "Save All",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "tagsHint": "comma-separated",
+    "columns": {
+      "name": "Name",
+      "plugin": "Plugin",
+      "language": "Language",
+      "tags": "Tags",
+      "active": "Active"
+    },
+    "error": "Failed to update resources.",
+    "toggleMeta": "Toggle metadata",
+    "copyToAll": "⇩ Copy to all",
+    "meta": {
+      "checksum": "Checksum",
+      "locations": "Locations",
+      "device": "Device",
+      "path": "Path",
+      "addLocation": "Add location",
+      "removeLocation": "Remove location"
     }
   },
   "settings": {

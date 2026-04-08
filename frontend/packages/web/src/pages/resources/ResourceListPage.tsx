@@ -31,6 +31,10 @@ export function ResourceListPage() {
   const [selected, setSelected] = useState<Set<number>>(new Set());
   const [deleting, setDeleting] = useState(false);
 
+  async function editSelected() {
+    navigate("/resources/batch-edit", { state: { ids: [...selected] } });
+  }
+
   const PLUGIN_TABS: Array<{ label: string; value: PluginName | "" }> = [
     { label: t("resources.tabs.all"), value: "" },
     { label: t("resources.tabs.ebook"), value: "ebook" },
@@ -85,15 +89,23 @@ export function ResourceListPage() {
         <h1 className="text-2xl font-bold text-gray-100">{t("resources.title")}</h1>
         <div className="flex gap-2">
           {someSelected && (
-            <Button
-              variant="danger"
-              onClick={deleteSelected}
-              disabled={deleting}
-            >
-              {deleting
-                ? t("resources.batchDeleting")
-                : t("resources.batchDelete", { count: selected.size })}
-            </Button>
+            <>
+              <Button
+                variant="secondary"
+                onClick={editSelected}
+              >
+                {t("resources.batchEdit", { count: selected.size })}
+              </Button>
+              <Button
+                variant="danger"
+                onClick={deleteSelected}
+                disabled={deleting}
+              >
+                {deleting
+                  ? t("resources.batchDeleting")
+                  : t("resources.batchDelete", { count: selected.size })}
+              </Button>
+            </>
           )}
           <Link to="/resources/new">
             <Button>{t("resources.addResource")}</Button>

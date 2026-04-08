@@ -54,6 +54,12 @@ export const resourcesApi = {
     return http.delete(`/resources/${id}`).then((r) => r.data);
   },
 
+  bulkUpdate(updates: Array<{ id: number } & Partial<Omit<Resource, "id" | "type" | "created_at" | "updated_at">>>) {
+    return http
+      .patch<Resource[]>("/resources", { updates })
+      .then((r) => r.data);
+  },
+
   bulkRemove(ids: number[]) {
     return http
       .delete<{ deleted: number[]; count: number }>("/resources", { data: { ids } })

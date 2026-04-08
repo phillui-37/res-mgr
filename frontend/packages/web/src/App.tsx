@@ -6,6 +6,7 @@ import { ResourceListPage } from "@/pages/resources/ResourceListPage.tsx";
 import { ResourceDetailPage } from "@/pages/resources/ResourceDetailPage.tsx";
 import { ResourceFormPage } from "@/pages/resources/ResourceFormPage.tsx";
 import { BatchImportPage } from "@/pages/resources/BatchImportPage.tsx";
+import { BatchEditPage } from "@/pages/resources/BatchEditPage.tsx";
 import { ConflictsPage } from "@/pages/resources/ConflictsPage.tsx";
 import { P2PRoomsPage } from "@/pages/p2p/P2PRoomsPage.tsx";
 import { P2PRoomDetailPage } from "@/pages/p2p/P2PRoomDetailPage.tsx";
@@ -33,6 +34,7 @@ export function App() {
         <Route path="resources" element={<ResourceListPage />} />
         <Route path="resources/new" element={<ResourceFormPage />} />
         <Route path="resources/batch" element={<BatchImportPage />} />
+        <Route path="resources/batch-edit" element={<BatchEditPage />} />
         <Route path="resources/conflicts" element={<ConflictsPage />} />
         <Route path="resources/:plugin/:id" element={<ResourceDetailPage />} />
         <Route path="series" element={<SeriesListPage />} />

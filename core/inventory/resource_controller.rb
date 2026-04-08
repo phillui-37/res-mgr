@@ -6,12 +6,18 @@ require "digest"
 #
 # GET    /resources              → list (filterable by plugin, type, tags, name, meta_cond[])
 # POST   /resources              → create
+# PATCH  /resources              → batch update (all fields except type)
+# DELETE /resources              → bulk soft-delete
 # GET    /resources/:id          → show
 # PATCH  /resources/:id          → update
 # DELETE /resources/:id          → soft-delete (sets active=false)
 # GET    /resources/duplicates   → list groups of resources sharing the same checksum
 # POST   /resources/:id/checksum → compute & persist SHA-256 for a local-path resource
 # POST   /resources/:id/remove-request → initiate two-step remote removal
+#
+# Batch update body: { "updates": [{ "id": 1, "name": "...", ... }, ...] }
+# All resource fields except "type" may be updated. Validates all entries before
+# persisting; any validation failure aborts the entire batch.
 #
 # meta_cond[] format: "plugin:field:value" — fuzzy LIKE match on plugin's meta table column.
 # Multiple conditions are ANDed. Joining multiple plugin tables gives empty results
@@ -42,8 +48,9 @@ class ResourceController
         r.post("remove-request") { remove_request(resource) }
       end
 
-      r.get  { list(r) }
-      r.post { create_resource(r) }
+      r.get   { list(r) }
+      r.post  { create_resource(r) }
+      r.patch { bulk_update(r) }
       r.delete { bulk_delete(r) }
     end
 
@@ -125,8 +132,30 @@ class ResourceController
       { deleted: resource.id }
     end
 
-    def bulk_delete(r)
-      ids = Array(r.params["ids"]).map(&:to_i).select { |id| id > 0 }
+    def bulk_update(r)
+      updates = Array(r.POST["updates"])
+      halt!(422, "updates[] is required and must be non-empty") if updates.empty?
+
+      ids = updates.map { |u| u["id"].to_i }
+      halt!(422, "Each update entry must have a valid id") unless ids.all? { |id| id > 0 }
+
+      resources_map = Resource.where(id: ids).each_with_object({}) { |res, h| h[res.id] = res }
+      missing = ids.reject { |id| resources_map.key?(id) }
+      halt!(404, "Resources not found: #{missing.join(', ')}") unless missing.empty?
+
+      to_save = updates.map do |entry|
+        resource = resources_map[entry["id"].to_i]
+        resource.set(batch_permitted_attrs(entry))
+        halt_invalid!(resource) unless resource.valid?
+        resource
+      end
+
+      DB.transaction { to_save.each(&:save) }
+      to_save.each { |res| run_taggers!(res) }
+      to_save.map(&:to_api_h)
+    end
+
+    def bulk_delete(r)      ids = Array(r.params["ids"]).map(&:to_i).select { |id| id > 0 }
       halt!(422, "ids[] is required and must be non-empty") if ids.empty?
       deleted = Resource.where(id: ids, active: true).update(active: false)
       { deleted: ids, count: deleted }
@@ -173,6 +202,12 @@ class ResourceController
 
     def permitted_attrs(params)
       %w[name type plugin locations tags checksum language active].each_with_object({}) do |key, h|
+        h[key.to_sym] = params[key] if params.key?(key)
+      end
+    end
+
+    def batch_permitted_attrs(params)
+      %w[name plugin locations tags checksum language active].each_with_object({}) do |key, h|
         h[key.to_sym] = params[key] if params.key?(key)
       end
     end

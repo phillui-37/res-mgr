@@ -24,6 +24,7 @@
     "noResults": "未找到资源。",
     "batchDelete": "🗑 删除 ({{count}})",
     "batchDeleting": "删除中…",
+    "batchEdit": "✏ 编辑 ({{count}})",
     "confirmBatchDelete": "删除选中的 {{count}} 个资源？此操作不可撤销。",
     "tabs": {
       "all": "全部",
@@ -110,6 +111,31 @@
       "done": "完成",
       "error": "错误",
       "skipped": "已跳过"
+    }
+  },
+  "batchEdit": {
+    "title": "批量编辑（{{count}} 项）",
+    "save": "全部保存",
+    "saving": "保存中…",
+    "cancel": "取消",
+    "tagsHint": "逗号分隔",
+    "columns": {
+      "name": "名称",
+      "plugin": "插件",
+      "language": "语言",
+      "tags": "标签",
+      "active": "激活"
+    },
+    "error": "批量更新资源失败。",
+    "toggleMeta": "展开/收起元数据",
+    "copyToAll": "⇩ 复制到全部",
+    "meta": {
+      "checksum": "校验和",
+      "locations": "位置",
+      "device": "设备",
+      "path": "路径",
+      "addLocation": "添加位置",
+      "removeLocation": "移除位置"
     }
   },
   "settings": {
